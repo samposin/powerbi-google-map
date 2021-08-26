@@ -1,0 +1,92 @@
+{
+    "dataRoles": [
+        {
+            "displayName": "Tool Tip",
+            "name": "toolTip",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "Title",
+            "name": "title",
+            "kind": "GroupingOrMeasure"
+        },
+        {
+            "displayName": "Location types",
+            "name": "locationTypes",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Latitude",
+            "name": "lat",
+            "kind": "GroupingOrMeasure"
+        },
+        {
+            "displayName": "Longitude",
+            "name": "lng",
+            "kind": "GroupingOrMeasure"
+        }
+    ],
+    "drilldown": {
+        "roles": ["toolTip"]
+    },
+    "objects": {
+        "myCustomObject": {
+            "displayName": "Google Map Settings",
+            "properties": {
+                "token": {
+                    "displayName": "token",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "iconURL": {
+                    "displayName": "Icon URL",
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
+        }
+    },
+    "dataViewMappings": [
+        {
+            "conditions": [{
+                "category" : {
+                    "max": 1
+                }
+            }
+            ],
+            "table": {
+                "rows": {
+                    "select": [
+                        {
+                            "for": {
+                                "in": "toolTip"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "title"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "locationTypes"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "lat"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "lng"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

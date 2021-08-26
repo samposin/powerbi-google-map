@@ -1,0 +1,17 @@
+{
+    "version": "1.0.0",
+    "author": {"name":"sam.posin","email":"sam@aisoftwares.co.in"},
+    "resources": [
+        {
+            "resourceId": "rId0",
+            "sourceType": 5,
+            "file": "resources/googleMap.pbiviz.json"
+        }
+    ],
+    "visual": {"name":"map","displayName":"Google Map","guid":"googleMap","visualClassName":"Visual","version":"1.0.0","description":"demo application","supportUrl":"https://github.com/samposin/powerbi-markers","gitHubUrl":"https://github.com/samposin/powerbi-markers"},
+    "metadata": {
+        "pbivizjson": {
+            "resourceId": "rId0"
+        }
+    }  
+}
