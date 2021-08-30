@@ -44,8 +44,7 @@ import * as ReactDOM from 'react-dom';
 import Map from './Map';
 
 import './../style/visual.less';
-import { VisualSettings } from "./settings";
-
+import { VisualSettings } from './settings';
 
 export class Visual implements IVisual {
   private target: HTMLElement;
@@ -56,7 +55,6 @@ export class Visual implements IVisual {
   private selectionManager: ISelectionManager;
 
   constructor(options: VisualConstructorOptions) {
-    // this.reactRoot = React.createElement(ReactCircleCard, {});
 
     // save the host in the visuals properties
     this.host = options.host;
@@ -71,12 +69,15 @@ export class Visual implements IVisual {
   }
 
   public update(options: VisualUpdateOptions) {
-    this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0])
+    this.settings = Visual.parseSettings(
+      options && options.dataViews && options.dataViews[0]
+    );
     let dataView: DataView = options.dataViews[0];
     let rows = dataView.table.rows;
     this.reactRoot.props.rows = rows;
+    this.reactRoot.props.table = dataView.table;
+    this.reactRoot.props.columns = dataView?.table?.columns;
     this.reactRoot.props.myCustomObject = this.settings.myCustomObject;
-    console.log(this.settings.myCustomObject);
   }
 
   private static parseSettings(dataView: DataView): VisualSettings {
@@ -88,7 +89,12 @@ export class Visual implements IVisual {
    * objects and properties you want to expose to the users in the property pane.
    *
    */
-  public enumerateObjectInstances(options: EnumerateVisualObjectInstancesOptions): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
-    return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
+  public enumerateObjectInstances(
+    options: EnumerateVisualObjectInstancesOptions
+  ): VisualObjectInstance[] | VisualObjectInstanceEnumerationObject {
+    return VisualSettings.enumerateObjectInstances(
+      this.settings || VisualSettings.getDefault(),
+      options
+    );
   }
 }

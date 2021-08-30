@@ -1,21 +1,6 @@
 {
     "dataRoles": [
         {
-            "displayName": "Tool Tip",
-            "name": "toolTip",
-            "kind": "Grouping"
-        },
-        {
-            "displayName": "Title",
-            "name": "title",
-            "kind": "GroupingOrMeasure"
-        },
-        {
-            "displayName": "Location types",
-            "name": "locationTypes",
-            "kind": "Measure"
-        },
-        {
             "displayName": "Latitude",
             "name": "lat",
             "kind": "GroupingOrMeasure"
@@ -24,11 +9,23 @@
             "displayName": "Longitude",
             "name": "lng",
             "kind": "GroupingOrMeasure"
+        },
+        {
+            "displayName": "Location types",
+            "name": "locationTypes",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Location Status",
+            "name": "status",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Tool Tip",
+            "name": "toolTip",
+            "kind": "GroupingOrMeasure"
         }
     ],
-    "drilldown": {
-        "roles": ["toolTip"]
-    },
     "objects": {
         "myCustomObject": {
             "displayName": "Google Map Settings",
@@ -50,23 +47,24 @@
     },
     "dataViewMappings": [
         {
-            "conditions": [{
-                "category" : {
-                    "max": 1
+            "conditions": [
+                {
+                    "category": {
+                        "max": 1
+                    }
                 }
-            }
             ],
             "table": {
                 "rows": {
                     "select": [
                         {
                             "for": {
-                                "in": "toolTip"
+                                "in": "lat"
                             }
                         },
                         {
                             "for": {
-                                "in": "title"
+                                "in": "lng"
                             }
                         },
                         {
@@ -76,12 +74,12 @@
                         },
                         {
                             "for": {
-                                "in": "lat"
+                                "in": "status"
                             }
                         },
                         {
                             "for": {
-                                "in": "lng"
+                                "in": "toolTip"
                             }
                         }
                     ]

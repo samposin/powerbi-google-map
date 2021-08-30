@@ -12,7 +12,6 @@ export declare class Visual implements IVisual {
     private settings;
     private host;
     private selectionManager;
-    private counter;
     constructor(options: VisualConstructorOptions);
     update(options: VisualUpdateOptions): void;
     private static parseSettings;
