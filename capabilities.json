@@ -3,17 +3,12 @@
         {
             "displayName": "Latitude",
             "name": "lat",
-            "kind": "GroupingOrMeasure"
+            "kind": "Grouping"
         },
         {
             "displayName": "Longitude",
             "name": "lng",
-            "kind": "GroupingOrMeasure"
-        },
-        {
-            "displayName": "Location types",
-            "name": "locationTypes",
-            "kind": "Measure"
+            "kind": "Grouping"
         },
         {
             "displayName": "Location Status",
@@ -36,8 +31,16 @@
                         "text": true
                     }
                 },
-                "iconURL": {
-                    "displayName": "Icon URL",
+                "activeStatus":{
+                    "displayName": "Active Status",
+                    "placeHolderText": "Active status Icon Url",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "inActiveStatus":{
+                    "displayName": "Inactive Status",
+                    "placeHolderText": "Inactive status Icon Url",
                     "type": {
                         "text": true
                     }
@@ -69,11 +72,6 @@
                         },
                         {
                             "for": {
-                                "in": "locationTypes"
-                            }
-                        },
-                        {
-                            "for": {
                                 "in": "status"
                             }
                         },
@@ -82,8 +80,13 @@
                                 "in": "toolTip"
                             }
                         }
-                    ]
-                }
+                        
+                    ],
+                    "dataReductionAlgorithm": {
+                        "sample": {"count": 10000}
+                    }
+                },
+                "rowCount": { "preferred": { "min": 2, "max": 100000 }, "supported": { "min": 1, "max": 100000 }}
             }
         }
     ]

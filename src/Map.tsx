@@ -12,47 +12,25 @@ import powerbi from 'powerbi-visuals-api';
 import DataViewTableRow = powerbi.DataViewTableRow;
 import ISelectionId = powerbi.visuals.ISelectionId;
 
-import { Card, Container, Typography } from "@material-ui/core";
+import { Container, Typography } from "@material-ui/core";
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import Backdrop from "@material-ui/core/Backdrop";
-import Fade from "@material-ui/core/Fade";
-import Button from "@material-ui/core/Button";
+
 
 const containerStyle = {
   width: "100%",
   height: "100vh",
 };
-const center = { lat: 41.7609023, lng: -72.7424573 };
+const center =  { lat: 31.53742365481714, lng: -90.81904175892141}
 
 const options = {
   imagePath:
     "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
+    maxZoom:13,
 };
 
 function createKey(location) {
   return location.lat + location.lng;
 }
-
-const modalStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    modal: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    paper: {
-      backgroundColor: theme.palette.background.paper,
-      border: "2px solid #000",
-      boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 2),
-    },
-    button: {
-      display: "flex",
-      justifyContent: "flex-end",
-    },
-  })
-);
 
 const toolTipStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,12 +38,7 @@ const toolTipStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "row",
       marginBottom: 10,
-    },
-    button: {
-      width: 120,
-      padding: 5,
-      alignSelf: "flex-end",
-      marginRight: 10,
+      fontFamily: 'Poppin'
     },
     boldText: {
       fontWeight: "bold",
@@ -74,17 +47,14 @@ const toolTipStyles = makeStyles((theme: Theme) =>
 );
 
 const Map = (props: any) => {
-  const modalClasses = modalStyles();
   const toolTipClasses = toolTipStyles();
 
   const [locations, setlocations] = useState([]);
   const [token, setToken] = useState("");
   const [activeMarker, setActiveMarker] = useState(null);
-  const [openModal, setOpenModal] = React.useState(false);
-  const [modalData, setModalData] = React.useState([]);
-  const [icon, setIcon] = useState("");
 
-  const mapRef = useRef<google.maps.Map<Element> | null>(null);
+  const [icon, setIcon] = useState("");
+  const [icon2, setIcon2] = useState("");
 
   useEffect(() => {
     var Interval = setInterval(function () {
@@ -98,16 +68,8 @@ const Map = (props: any) => {
     }, 3000);
 
     var iconInterval = setInterval(function () {
-      if (
-        props?.myCustomObject?.iconURL !== undefined &&
-        props?.myCustomObject?.iconURL !== icon
-      ) {
-        setIcon(props?.myCustomObject?.iconURL);
-        // clearInterval(Interval);
-      } else {
-        if (icon !== "") setIcon("");
-        setlocations(props.rows);
-      }
+        setIcon(props?.myCustomObject?.activeStatus);
+        setIcon2(props?.myCustomObject?.inActiveStatus);
     }, 3000);
   }, []);
 
@@ -124,77 +86,11 @@ const Map = (props: any) => {
 
   const closeInfoWindow = () => {
     handleActiveMarker(null);
-    setModalData([]);
   };
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
-    setActiveMarker(null);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setModalData([]);
-  };
-
-  const showModal = () => {
-    // const result = locations.filter((res, index) => {
-    //   if (activeMarker === index) {
-    //     return res;
-    //   }
-    //   return null;
-    // });
-    return (
-      <Card>
-        {modalData !== null
-          ? modalData.map((res) => {
-              return (
-                <div>
-                  <Modal
-                    aria-labelledby="transition-modal-title"
-                    aria-describedby="transition-modal-description"
-                    className={modalClasses.modal}
-                    key={activeMarker}
-                    open={openModal}
-                    // onClose={handleClose}
-                    closeAfterTransition
-                    BackdropComponent={Backdrop}
-                    BackdropProps={{
-                      timeout: 500,
-                    }}
-                  >
-                    <Fade in={openModal}>
-                      <div className={modalClasses.paper}>
-                        {modalData !== null &&
-                          props.columns.map((res1, counter) => {
-                            return (
-                              <p style={{ margin: 0 }}>
-                                {props.columns[counter].displayName}:{" "}
-                                <span style={{ fontWeight: "normal" }}>
-                                  {modalData[0][counter]}
-                                </span>
-                              </p>
-                            );
-                          })}
-                        <div className={modalClasses.button}>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleCloseModal}
-                          >
-                            OK
-                          </Button>
-                        </div>
-                      </div>
-                    </Fade>
-                  </Modal>
-                </div>
-              );
-            })
-          : null}
-      </Card>
-    );
-  };
+  function handleZoomChanged() {
+    console.log("current zoom", this.getZoom()); //current zoom
+  }
 
   return (
     <>
@@ -203,8 +99,9 @@ const Map = (props: any) => {
           <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
-            zoom={3}
+            zoom={4}
             id="map"
+            onZoomChanged={handleZoomChanged}
           >
             <MarkerClusterer options={options}>
               {(clusterer) =>
@@ -214,7 +111,6 @@ const Map = (props: any) => {
                     const selection: ISelectionId = props.host.createSelectionIdBuilder()
                         .withTable(props?.table, index)
                         .createSelectionId();
-                        console.log("selection:...", selection);
                   return (
                     <Marker
                       key={createKey(obj)}
@@ -228,24 +124,27 @@ const Map = (props: any) => {
                       //     (obj[len - 2] === 'DataCenter' && thirdparty),
                       //   scaledSize: new google.maps.Size(30, 30),
                       // }}
+                      
+
                       icon={{
-                        url:
-                          (props?.myCustomObject?.iconURL != "" &&
-                            props?.myCustomObject?.iconURL) ||
-                          (obj[3] === "Active" &&
-                            "https://maps.google.com/mapfiles/ms/micons/green.png") ||
-                          (obj[3] === "Inactive" &&
-                            "https://maps.google.com/mapfiles/ms/micons/red.png"),
+                        url: (obj[2] === "Active" && icon) ||
+                          (obj[2] === "Inactive" && icon2),
                         scaledSize: new google.maps.Size(30, 30),
                       }}
                       clusterer={clusterer}
                       onMouseOver={() => {
                         handleActiveMarker(index);
-                        setModalData([obj]);
                       }}
-                      // onMouseOut={closeInfoWindow}
+                      onMouseOut={closeInfoWindow}
                       onClick={ () => {
                         props.selectionManager.select(selection);
+                      }}
+                      onRightClick={(e: any)=> {
+                        // @ts-ignore
+                       let p = props.selectionManager.showContextMenu(selection, {
+                            x: e.domEvent.clientX,
+                            y: e.domEvent.clientY
+                        });
                       }}
                     >
                       {activeMarker === index ? (
@@ -258,14 +157,13 @@ const Map = (props: any) => {
                               maxWidth="sm"
                             >
                               <div style={{ marginRight: 10 }}>
-                              {modalData !== null &&
-                                props.columns.map((res21, counter1) => {
-                                  if( obj[counter1] === 'NULL' || counter1 < 4 )
+                              {props?.columns?.map((res21, counter1) => {
+                                  if( obj[counter1] === 'NULL' || obj[counter1] === 0 || counter1 < 3 )
                                   return;                               
                                   return (
                                     <Typography className={toolTipClasses.boldText}>
-                                      {props.columns[counter1].displayName}:{" "}
-                                      <span style={{ fontWeight: "normal" }}>
+                                      <span style={{ fontWeight: "normal" }}>{props.columns[counter1].displayName}:{" "}</span>
+                                      <span>
                                         {obj[counter1]}
                                       </span>
                                     </Typography>
@@ -273,15 +171,6 @@ const Map = (props: any) => {
                                 })}
                                 </div>
                             </Container>
-                            <Button
-                              className={toolTipClasses.button}
-                              variant="contained"
-                              onClick={handleOpenModal}
-                              color="primary"
-                              disableRipple
-                            >
-                              show more
-                            </Button>
                           </div>
                         </InfoWindow>
                       ) : null}
@@ -290,19 +179,9 @@ const Map = (props: any) => {
                 })
               }
             </MarkerClusterer>
-            {showModal()}
           </GoogleMap>
         </LoadScript>
-      ) : (
-        <div className="tokenMsgWrapper">
-          <h3 className="red">Google Map Api Token is required!</h3>
-          <ul className="ulStyled">
-            <li>Click on format icon</li>
-            <li>Expand the google map settings</li>
-            <li>paste your api token in token field.</li>
-          </ul>
-        </div>
-      )}
+      ) : (<></>)}
     </>
   );
 };

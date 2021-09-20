@@ -32,8 +32,6 @@ import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import ISelectionManager = powerbi.extensibility.ISelectionManager;
-import ISelectionId = powerbi.visuals.ISelectionId;
-import ISelectionIdBuilder = powerbi.visuals.ISelectionIdBuilder;
 
 import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
 import VisualObjectInstance = powerbi.VisualObjectInstance;
@@ -60,7 +58,6 @@ export class Visual implements IVisual {
     this.host = options.host;
     // create selection manager
     this.selectionManager = this.host.createSelectionManager();
-
     this.reactRoot = React.createElement(Map, {});
     this.reactRoot.props.selectionManager = this.selectionManager;
     this.reactRoot.props.host = this.host;
@@ -72,6 +69,7 @@ export class Visual implements IVisual {
     this.settings = Visual.parseSettings(
       options && options.dataViews && options.dataViews[0]
     );
+
     let dataView: DataView = options.dataViews[0];
     let rows = dataView.table.rows;
     this.reactRoot.props.rows = rows;

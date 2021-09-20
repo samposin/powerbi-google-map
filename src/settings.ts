@@ -33,9 +33,10 @@ import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
 export class VisualSettings extends DataViewObjectsParser {
   public myCustomObject: myCustomObject = new myCustomObject();
 }
+
 export class myCustomObject {
   public token: string = "";
   public iconURL: string = "";
+  public activeStatus: string = "";
+  public inActiveStatus: string = "";
 }
-
-
