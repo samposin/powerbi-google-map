@@ -5,7 +5,6 @@ export declare class VisualSettings extends DataViewObjectsParser {
 }
 export declare class myCustomObject {
     token: string;
-    iconURL: string;
     activeStatus: string;
     inActiveStatus: string;
 }

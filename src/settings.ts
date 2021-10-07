@@ -36,7 +36,6 @@ export class VisualSettings extends DataViewObjectsParser {
 
 export class myCustomObject {
   public token: string = "";
-  public iconURL: string = "";
   public activeStatus: string = "";
   public inActiveStatus: string = "";
 }

@@ -6,8 +6,8 @@ import DialogConstructorOptions = powerbiVisualsApi.extensibility.visual.DialogC
 var powerbiKey: any = "powerbi";
 var powerbi: any = window[powerbiKey];
 
-var googleMap_DEBUG: IVisualPlugin = {
-    name: 'googleMap_DEBUG',
+var googleMap: IVisualPlugin = {
+    name: 'googleMap',
     displayName: 'Google Map',
     class: 'Visual',
     apiVersion: '3.8.0',
@@ -30,7 +30,7 @@ var googleMap_DEBUG: IVisualPlugin = {
 if (typeof powerbi !== "undefined") {
     powerbi.visuals = powerbi.visuals || {};
     powerbi.visuals.plugins = powerbi.visuals.plugins || {};
-    powerbi.visuals.plugins["googleMap_DEBUG"] = googleMap_DEBUG;
+    powerbi.visuals.plugins["googleMap"] = googleMap;
 }
 
-export default googleMap_DEBUG;
+export default googleMap;

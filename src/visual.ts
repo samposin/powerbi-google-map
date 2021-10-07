@@ -24,58 +24,58 @@
  *  THE SOFTWARE.
  */
 'use strict';
-import powerbi from 'powerbi-visuals-api';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import "./../style/visual.less";
+import { Map, initialState } from "./Map";
+import { VisualSettings } from './settings';
 
+import powerbi from 'powerbi-visuals-api';
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+import ISelectionManager = powerbi.extensibility.ISelectionManager;
+import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
+import VisualObjectInstance = powerbi.VisualObjectInstance;
+import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
 import DataView = powerbi.DataView;
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
-import IVisualHost = powerbi.extensibility.visual.IVisualHost;
-import ISelectionManager = powerbi.extensibility.ISelectionManager;
+import IViewport = powerbi.IViewport;
 
-import EnumerateVisualObjectInstancesOptions = powerbi.EnumerateVisualObjectInstancesOptions;
-import VisualObjectInstance = powerbi.VisualObjectInstance;
-import VisualObjectInstanceEnumerationObject = powerbi.VisualObjectInstanceEnumerationObject;
-
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import Map from './Map';
-
-import './../style/visual.less';
-import { VisualSettings } from './settings';
 
 export class Visual implements IVisual {
   private target: HTMLElement;
-  private reactRoot: React.FunctionComponentElement<any>;
-
+  private reactRoot: React.ComponentElement<any, any>;
   private settings: VisualSettings;
   private host: IVisualHost;
-  private selectionManager: ISelectionManager;
+  private selectionManager: ISelectionManager;  
 
   constructor(options: VisualConstructorOptions) {
-
     // save the host in the visuals properties
     this.host = options.host;
     // create selection manager
     this.selectionManager = this.host.createSelectionManager();
-    this.reactRoot = React.createElement(Map, {});
-    this.reactRoot.props.selectionManager = this.selectionManager;
-    this.reactRoot.props.host = this.host;
+    this.reactRoot = React.createElement(Map, { selectionManager: this.selectionManager, host: this.host });
     this.target = options.element;
     ReactDOM.render(this.reactRoot, this.target);
   }
 
   public update(options: VisualUpdateOptions) {
-    this.settings = Visual.parseSettings(
-      options && options.dataViews && options.dataViews[0]
-    );
-
-    let dataView: DataView = options.dataViews[0];
-    let rows = dataView.table.rows;
-    this.reactRoot.props.rows = rows;
-    this.reactRoot.props.table = dataView.table;
-    this.reactRoot.props.columns = dataView?.table?.columns;
-    this.reactRoot.props.myCustomObject = this.settings.myCustomObject;
+    if (options.dataViews && options.dataViews[0]) {
+      this.settings = Visual.parseSettings(
+        options && options.dataViews && options.dataViews[0]
+      );
+      let dataView: DataView = options.dataViews[0];
+      let rows = dataView.table.rows;
+      Map.update({
+        rows: rows,
+        table: dataView.table,
+        columns: dataView?.table?.columns,
+        myCustomObject: this.settings.myCustomObject
+      });
+    } else {
+      Map.update(initialState);
+    }
   }
 
   private static parseSettings(dataView: DataView): VisualSettings {
@@ -95,4 +95,5 @@ export class Visual implements IVisual {
       options
     );
   }
+  
 }
